@@ -5,6 +5,7 @@
     "codespaces": {
       "openFiles": [
         "README.md",
+        "langchain_helper.py",
         "streamlit_app.py"
       ]
     }
