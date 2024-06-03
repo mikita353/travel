@@ -2,4 +2,5 @@ altair
 pandas
 streamlit
 langchain
+langchain_community
 openai
