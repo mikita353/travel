@@ -3,12 +3,6 @@ from langchain.llms import OpenAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.chains import SequentialChain
-#from secret_key import openapi_key
-
-import os
-os.environ['OPENAI_API_KEY'] = "12334566"
-
-llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
 
 def generate_baby_names(gender: str,nationality:str) -> list[str]:
     """
@@ -44,8 +38,16 @@ def generate_baby_names(gender: str,nationality:str) -> list[str]:
     return response
 
 
-
 st.title('Baby Name Generator')
+
+with st.sidebar:
+    openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
+
+# initialize Open AI
+import os
+os.environ['OPENAI_API_KEY'] = openai_api_key
+llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
+
 
 gender = st.sidebar.selectbox("Choose a gender",
                              ("Girl", "Boy"))
