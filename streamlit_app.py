@@ -43,6 +43,10 @@ st.title('Baby Name Generator')
 with st.sidebar:
     openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
 
+if not openai_api_key:
+        st.info("Please add your OpenAI API key to continue.")
+        st.stop()
+    
 # initialize Open AI
 import os
 os.environ['OPENAI_API_KEY'] = openai_api_key
