@@ -6,7 +6,7 @@ from langchain.chains import SequentialChain
 #from secret_key import openapi_key
 
 import os
-os.environ['OPENAI_API_KEY'] = openapi_key
+os.environ['OPENAI_API_KEY'] = "12334566"
 
 llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
 
