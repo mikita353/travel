@@ -56,7 +56,7 @@ nationality = st.sidebar.selectbox("Choose the nationality",
 
 
 if gender and nationality:
-    response = langchain_helper.generate_baby_names(gender, nationality)
+    response = generate_baby_names(gender, nationality)
     baby_names = response['baby_names'].strip().split(",")
     st.write("** Top 5 Baby Names **")
 
