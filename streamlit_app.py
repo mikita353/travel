@@ -53,9 +53,9 @@ os.environ['OPENAI_API_KEY'] = openai_api_key
 llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
 
 
-gender = st.sidebar.selectbox("Choose a gender",
+gender = st.selectbox("Choose a gender",
                              ("Girl", "Boy"))
-nationality = st.sidebar.selectbox("Choose the nationality", 
+nationality = st.selectbox("Choose the nationality", 
                                   ("American", "Indian", "Chinese", 
                                   "Russian")
                                 )
