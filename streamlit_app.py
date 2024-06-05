@@ -19,7 +19,7 @@ def generate_baby_names(gender: str,nationality:str) -> list[str]:
     prompt_template_name = PromptTemplate(
         input_variables=['gender', 'nationality'],
         template="""I want to find a name for a {nationality} {gender} baby. 
-                    Suggest top 5 popular names for the baby.
+                    Suggest top 5 least popular names for the baby.
                     Return it as a comma separated list """
                 )
 
