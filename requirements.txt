@@ -3,4 +3,5 @@ pandas
 streamlit
 langchain
 langchain_community
+langchain-community
 openai
