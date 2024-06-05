@@ -37,9 +37,11 @@ def generate_baby_names(gender: str,nationality:str) -> list[str]:
                       'nationality': nationality})
     return response
 
-
 # main code
 st.title('Baby Name Generator')
+
+# DO NOT CHANGE BELOW ----
+
 
 # get open AI key from user
 with st.sidebar:
@@ -54,6 +56,7 @@ import os
 os.environ['OPENAI_API_KEY'] = openai_api_key
 llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
 
+# DO NOT CHANGE ABOVE ----
 
 # ask user for what they want
 gender = st.selectbox("Choose a gender",
