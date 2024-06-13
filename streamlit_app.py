@@ -4,13 +4,12 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.chains import SequentialChain
 
-def generate_baby_names(gender: str,nationality:str) -> list[str]:
+def generate_baby_names(favorite_movies: str) -> list[str]:
     """
     Generate a list of 5 baby names
 
     Parameters:
-    gender (str): gender of baby
-    nationailty (str) : nationailty of baby
+    favorite_movies (str): Favorite movies
 
     Returns:
     list: list of baby names
@@ -18,27 +17,27 @@ def generate_baby_names(gender: str,nationality:str) -> list[str]:
 
     prompt_template_name = PromptTemplate(
         input_variables=['gender', 'nationality'],
-        template="""I want to find a name for a {nationality} {gender} baby. 
-                    Suggest top 5 least popular names for the baby.
-                    Return it as a comma separated list """
+        template="""Based on these movies: {favorite_movies}, create a list of movies you would recommend.
+        The list should have at least 3 movies and at most 7 movies. The list should neat and concise, 
+        providing a short 1-3 sentence summary on the movie. There shouldn't be a lot of unnecessary
+        modifiers and words in general. A thirteen year old should be able to understand your vocabulary."""
                 )
 
     name_chain = LLMChain(llm=llm,
                           prompt=prompt_template_name,
-                          output_key='baby_names')
+                          output_key='Movie_suggestions')
 
     chain = SequentialChain(
         chains=[name_chain],
-        input_variables=['gender', 'nationality'],
-        output_variables=['baby_names']
+        input_variables=['favorite_movies',,
+        output_variables=['Movie_suggestions']
     )
 
-    response = chain({'gender': gender,
-                      'nationality': nationality})
+    response = chain({'favorite_movies': favorite_movies})
     return response
 
 # main code
-st.title('Baby Name Generator')
+st.title('Movie Suggestions')
 
 # DO NOT CHANGE BELOW ----
 
@@ -59,16 +58,14 @@ llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
 # DO NOT CHANGE ABOVE ----
 
 # ask user for what they want
-gender = st.selectbox("Choose a gender",
-                             ("Girl", "Boy"))
-nationality = st.selectbox("Choose the nationality", 
-                                  ("American", "Indian", "Chinese"))
+favorite_movie = st.textbox()
+
 
 # get the answer from LLM
-if gender and nationality:
-    response = generate_baby_names(gender, nationality)
-    baby_names = response['baby_names'].strip().split(",")
-    st.write("** Top 5 Baby Names **")
+#if gender and nationality:
+ #   response = generate_baby_names(gender, nationality)
+Movie_suggestions = response['Movie Suggestions: '].strip().split(",")
+   # st.write("** Top 5 Baby Names **")
 
-    for name in baby_names:
+    for name in Movie_suggestions:
         st.write("--", name)
