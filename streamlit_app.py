@@ -4,9 +4,9 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.chains import SequentialChain
 
-def generate_baby_names(favorite_movies: str) -> list[str]:
+def generate_movie_suggestions(favorite_movies: str) -> list[str]:
     """
-    Generate a list of 5 baby names
+    Generate a list of movie suggestions
 
     Parameters:
     favorite_movies (str): Favorite movies
