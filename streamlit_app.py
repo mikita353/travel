@@ -61,8 +61,9 @@ llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
 favorite_movies = st.text_input("Enter at least 2 of your favorite movies separated by comma")
 
 # get the answer from LLM
-response = generate_movie_suggestions(favorite_movies)
-Movie_suggestions = response['Movie_suggestions'].strip().split(",")
+if favorite_movies:
+    response = generate_movie_suggestions(favorite_movies)
+    Movie_suggestions = response['Movie_suggestions'].strip().split(",")
 
-for name in Movie_suggestions:
-    st.write("--", name)
+    for name in Movie_suggestions:
+        st.write("--", name)
