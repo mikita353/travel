@@ -58,7 +58,7 @@ llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
 # DO NOT CHANGE ABOVE ----
 
 # ask user for what they want
-favorite_movies = st.textbox()
+favorite_movies = st.text_input("Enter at least 2 of your favorite movies separated by comma")
 
 # get the answer from LLM
 response = generate_movie_suggestions(favorite_movies)
