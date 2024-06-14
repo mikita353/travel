@@ -58,13 +58,11 @@ llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
 # DO NOT CHANGE ABOVE ----
 
 # ask user for what they want
-favorite_movie = st.textbox()
+favorite_movies = st.textbox()
 
 # get the answer from LLM
-#if gender and nationality:
 response = generate_movie_suggestions(favorite_movies)
 Movie_suggestions = response['Movie Suggestions: '].strip().split(",")
-   # st.write("** Top 5 Baby Names **")
 
 for name in Movie_suggestions:
     st.write("--", name)
