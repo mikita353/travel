@@ -31,7 +31,7 @@ def generate_movie_suggestions(favorite_movies: str) -> list[str]:
         chains=[name_chain],
         input_variables=['favorite_movies']
         output_variables=['Movie_suggestions']
-    
+     )    
 
     response = chain({'favorite_movies': favorite_movies})
     return response
