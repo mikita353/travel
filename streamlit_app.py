@@ -67,5 +67,5 @@ favorite_movie = st.textbox()
 Movie_suggestions = response['Movie Suggestions: '].strip().split(",")
    # st.write("** Top 5 Baby Names **")
 
-    for name in Movie_suggestions:
-        st.write("--", name)
+for name in Movie_suggestions:
+    st.write("--", name)
