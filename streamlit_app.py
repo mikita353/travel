@@ -62,7 +62,7 @@ favorite_movies = st.text_input("Enter at least 2 of your favorite movies separa
 
 # get the answer from LLM
 response = generate_movie_suggestions(favorite_movies)
-Movie_suggestions = response['Movie Suggestions: '].strip().split(",")
+Movie_suggestions = response['Movie Suggestions'].strip().split(",")
 
 for name in Movie_suggestions:
     st.write("--", name)
