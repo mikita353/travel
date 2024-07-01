@@ -113,4 +113,4 @@ p1 = st.text_input(prompt)
 if favorite_movies:
     response = generate_travel(favorite_movies)
     prompt = response['travel'].strip().split(",")
-    '''
+'''
