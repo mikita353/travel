@@ -10,7 +10,7 @@ def question1 (): list[str]
     
     Returns:
     A question for the user
-        """
+    """
 
     prompt_template_name = PromptTemplate(
     
