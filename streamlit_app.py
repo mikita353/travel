@@ -23,7 +23,7 @@ def question1():
                           prompt=prompt_template_name,
                           output_key='travel')
 
-    x,y,z = name_chain.run()
+    z = name_chain.run("")
     return z
     #test = 'vacation'
     #chain = SequentialChain(
