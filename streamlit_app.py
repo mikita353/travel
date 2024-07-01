@@ -4,40 +4,68 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.chains import SequentialChain
 
-def generate_movie_suggestions(favorite_movies: str) -> list[str]:
+def question1 (): -> list[str]:
+    """
+    Ask the first question to plan the vacation
+    
+    Returns:
+    A question for the user
+        """
+
+    prompt_template_name = PromptTemplate(
+    
+        template="""You are planning an entire vacation for me. Ask me five detailed questions to 
+        provide me a tentative trip plan. Ask me one at a time; wait for me to respond and then
+        proceed with the next question. Assume I don't know where I want to go and suggest a spot.
+        Then tell me the "tentative" trip.""")
+
+    name_chain = LLMChain(llm=llm,
+                          prompt=prompt_template_name,
+                          output_key='travel')
+
+    chain = SequentialChain(
+        chains=[name_chain],
+        output_variables=['travel']
+     )    
+
+    response = chain()
+    return response
+
+
+    
+def generate_travel(prompt1: str) -> list[str]:
     """
     Generate a list of movie suggestions
 
     Parameters:
-    favorite_movies (str): Favorite movies
+    prompt1 (str): prompt 1
 
     Returns:
-    list: list of movie suggestions
+    list: Tentative trip plan.
     """
 
     prompt_template_name = PromptTemplate(
         input_variables=['gender', 'nationality'],
-        template="""Based on these movies: {favorite_movies}, create a list of movies you would recommend.
-        The list should have at least 3 movies and at most 7 movies. The list should neat and concise, 
-        providing a short 1-3 sentence summary on the movie. There shouldn't be a lot of unnecessary
-        modifiers and words in general. A thirteen year old should be able to understand your vocabulary."""
-                )
+        template="""You are planning an entire vacation for me. Ask me five detailed questions to 
+        provide me a tentative trip plan. Ask me one at a time; wait for me to respond and then
+        proceed with the next question. Assume I don't know where I want to go and suggest a spot.
+        Then tell me the "tentative" trip.""")
 
     name_chain = LLMChain(llm=llm,
                           prompt=prompt_template_name,
-                          output_key='Movie_suggestions')
+                          output_key='travel')
 
     chain = SequentialChain(
         chains=[name_chain],
         input_variables=['favorite_movies'],
-        output_variables=['Movie_suggestions']
+        output_variables=['travel']
      )    
 
     response = chain({'favorite_movies': favorite_movies})
     return response
 
 # main code
-st.title('Movie Suggestions')
+st.title('Travel Suggestions')
 
 # DO NOT CHANGE BELOW ----
 
@@ -50,20 +78,26 @@ if not openai_api_key:
         st.info("Please add your OpenAI API key to continue.")
         st.stop()
     
-# initialize Open AI
-import os
+# initialize Open AIimport os
 os.environ['OPENAI_API_KEY'] = openai_api_key
 llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
-
+ 
 # DO NOT CHANGE ABOVE ----
 
+prompt = question1()
+st.write(prompt)
+
+
+'''
+
 # ask user for what they want
-favorite_movies = st.text_input("Enter at least 2 of your favorite movies separated by comma")
+prompt = generate_xxx()
+
+# for loop
+p1 = st.text_input(prompt)
 
 # get the answer from LLM
 if favorite_movies:
-    response = generate_movie_suggestions(favorite_movies)
-    Movie_suggestions = response['Movie_suggestions'].strip().split(",")
-
-    for name in Movie_suggestions:
-        st.write("--", name)
+    response = generate_travel(favorite_movies)
+    prompt = response['travel'].strip().split(",")
+    '''
