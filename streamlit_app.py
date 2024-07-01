@@ -25,6 +25,7 @@ def question1():
 
     chain = SequentialChain(
         chains=[name_chain],
+        input_variables=[],
         output_variables=['travel']
      )    
 
