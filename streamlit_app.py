@@ -24,9 +24,9 @@ def question1():
         proceed with the next question. Assume I don't know where I want to go and suggest a spot.
         Then tell me the "tentative" trip."""
 
-    name_chain = LLMChain(llm=llm,
-                          prompt=prompt_template_name,
-                          output_key='travel')
+    #name_chain = LLMChain(llm=llm,
+    #                      prompt=prompt_template_name,
+    #                      output_key='travel')
 
     response = llm(prompt)
     #response = name_chain.run("")
