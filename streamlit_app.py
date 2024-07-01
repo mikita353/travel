@@ -23,7 +23,9 @@ def question1():
                           prompt=prompt_template_name,
                           output_key='travel')
 
-    z = name_chain.run("")
+    response = name_chain.run("")
+    return response
+    
     return z
     #test = 'vacation'
     #chain = SequentialChain(
@@ -90,8 +92,8 @@ llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
 # DO NOT CHANGE ABOVE ----
 
 response = question1()
-prompt = response['travel'].strip().split(",")
-st.write(prompt)
+#prompt = response['travel'].strip().split(",")
+st.write(response)
 
 
 '''
