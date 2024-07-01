@@ -78,7 +78,8 @@ if not openai_api_key:
         st.info("Please add your OpenAI API key to continue.")
         st.stop()
     
-# initialize Open AIimport os
+# initialize Open AI
+import os
 os.environ['OPENAI_API_KEY'] = openai_api_key
 llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
  
