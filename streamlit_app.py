@@ -4,7 +4,7 @@ from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.chains import SequentialChain
 
-def question1 (): -> list[str]:
+def question1 (): list[str]
     """
     Ask the first question to plan the vacation
     
