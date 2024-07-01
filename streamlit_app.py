@@ -87,7 +87,8 @@ llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
  
 # DO NOT CHANGE ABOVE ----
 
-prompt = question1()
+response = question1()
+prompt = response['travel'].strip().split(",")
 st.write(prompt)
 
 
