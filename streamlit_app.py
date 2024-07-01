@@ -19,17 +19,17 @@ def question1():
         proceed with the next question. Assume I don't know where I want to go and suggest a spot.
         Then tell me the "tentative" trip.""")
 
-    prompt = """You are planning an entire vacation for me. Ask me detailed questions to 
+    prompt = """You are planning an entire vacation for me. Ask me 5 detailed questions to 
         provide me a tentative trip plan. Ask me one at a time; wait for me to respond and then
         proceed with the next question. Assume I don't know where I want to go and suggest a spot.
-        Then tell me the tentative trip. What is the first question?"""
+        Then tell me the tentative trip."""
 
     #name_chain = LLMChain(llm=llm,
     #                      prompt=prompt_template_name,
     #                      output_key='travel')
 
-    response = llm(prompt)
-    #response = name_chain.run("")
+    #response = llm(prompt)
+    response = llm.chat.completions.create(messages=prompt)
     return response
     
     #test = 'vacation'
