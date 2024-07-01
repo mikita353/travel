@@ -105,20 +105,20 @@ if not openai_api_key:
 # initialize Open AI
 import os
 os.environ['OPENAI_API_KEY'] = openai_api_key
-#llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
+llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
  
 # DO NOT CHANGE ABOVE ----
 
-response = question1()
+#response = question1()
 #prompt = response['travel'].strip().split(",")
-st.write(response)
+#st.write(response)
 
 
 # ask user for what they want
 #prompt = generate_xxx()
 
 # for loop
-#p1 = st.text_input(prompt)
+p1 = st.text_input(prompt)
 
 # get the answer from LLM
 #if favorite_movies:
