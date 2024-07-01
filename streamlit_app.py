@@ -28,8 +28,18 @@ def question1():
     #                      prompt=prompt_template_name,
     #                      output_key='travel')
 
+    response = llm.chat.completions.create(
+          messages=[
+            {
+              "role": "user",
+              "content": prompt,
+            }
+          ]
+    )
+
+        
     #response = llm(prompt)
-    response = llm.chat.completions.create(messages=prompt)
+    #response = llm.chat.completions.create(messages=prompt)
     return response
     
     #test = 'vacation'
@@ -101,16 +111,14 @@ response = question1()
 st.write(response)
 
 
-'''
-
 # ask user for what they want
-prompt = generate_xxx()
+#prompt = generate_xxx()
 
 # for loop
-p1 = st.text_input(prompt)
+#p1 = st.text_input(prompt)
 
 # get the answer from LLM
-if favorite_movies:
-    response = generate_travel(favorite_movies)
-    prompt = response['travel'].strip().split(",")
-'''
+#if favorite_movies:
+#    response = generate_travel(favorite_movies)
+#    prompt = response['travel'].strip().split(",")
+#
