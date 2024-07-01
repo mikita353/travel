@@ -30,7 +30,7 @@ def question1():
         output_variables=['travel']
      )    
 
-    response = chain()
+    response = chain({'test': test})
     return response
 
 
