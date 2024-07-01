@@ -23,15 +23,17 @@ def question1():
                           prompt=prompt_template_name,
                           output_key='travel')
 
-    test = 'vacation'
-    chain = SimpleRequestChain(
-        chains=[name_chain],
-        input_variables=['test'],
-        output_variables=['travel']
-     )    
+    x,y,z = name_chain.run()
+    return z
+    #test = 'vacation'
+    #chain = SequentialChain(
+     #   chains=[name_chain],
+      #  input_variables=['test'],
+      #  output_variables=['travel']
+     #)    
 
-    response = chain({'test': test})
-    return response
+    #response = chain({'test': test})
+    #return response
 
 
     
