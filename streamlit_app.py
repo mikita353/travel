@@ -13,7 +13,7 @@ def question1():
     """
 
     prompt_template_name = PromptTemplate(
-    
+        input_variables=[],
         template="""You are planning an entire vacation for me. Ask me five detailed questions to 
         provide me a tentative trip plan. Ask me one at a time; wait for me to respond and then
         proceed with the next question. Assume I don't know where I want to go and suggest a spot.
