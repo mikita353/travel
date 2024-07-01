@@ -29,15 +29,17 @@ def question1():
     #                      prompt=prompt_template_name,
     #                      output_key='travel')
 
+    llm = OpenAI()
     response = llm.chat.completions.create(
-          messages=[
+        model="gpt-3.5-turbo",
+        temperature=0.6,
+        messages=[
             {
               "role": "user",
               "content": prompt,
             }
           ]
     )
-
         
     #response = llm(prompt)
     #response = llm.chat.completions.create(messages=prompt)
@@ -103,7 +105,7 @@ if not openai_api_key:
 # initialize Open AI
 import os
 os.environ['OPENAI_API_KEY'] = openai_api_key
-llm = OpenAI(model="gpt-3.5-turbo-instruct", temperature = 0.6)
+#llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
  
 # DO NOT CHANGE ABOVE ----
 
