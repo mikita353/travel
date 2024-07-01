@@ -24,7 +24,7 @@ def question1():
                           output_key='travel')
 
     test = 'vacation'
-    chain = SequentialChain(
+    chain = SimpleRequestChain(
         chains=[name_chain],
         input_variables=['test'],
         output_variables=['travel']
