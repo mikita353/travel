@@ -23,9 +23,10 @@ def question1():
                           prompt=prompt_template_name,
                           output_key='travel')
 
+    test = 'vacation'
     chain = SequentialChain(
         chains=[name_chain],
-        input_variables=[],
+        input_variables=['test'],
         output_variables=['travel']
      )    
 
