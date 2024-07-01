@@ -22,7 +22,7 @@ def question1():
     prompt = """You are planning an entire vacation for me. Ask me five detailed questions to 
         provide me a tentative trip plan. Ask me one at a time; wait for me to respond and then
         proceed with the next question. Assume I don't know where I want to go and suggest a spot.
-        Then tell me the "tentative" trip."""
+        Then tell me the tentative trip. What is the first question?"""
 
     #name_chain = LLMChain(llm=llm,
     #                      prompt=prompt_template_name,
