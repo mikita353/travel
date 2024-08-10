@@ -106,7 +106,7 @@ if not openai_api_key:
 import os
 os.environ['OPENAI_API_KEY'] = openai_api_key
 #llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
-llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
+llm = OpenAI(model_name="gpt-3.5-turbo", temperature = 0.6)
  
 # DO NOT CHANGE ABOVE ----
 
