@@ -25,35 +25,35 @@ def question1():
         proceed with the next question. Assume I don't know where I want to go and suggest a spot.
         Then tell me the tentative trip."""
 
-    #name_chain = LLMChain(llm=llm,
-    #                      prompt=prompt_template_name,
-    #                      output_key='travel')
+    name_chain = LLMChain(llm=llm,
+                          prompt=prompt_template_name,
+                          output_key='travel')
 
-    llm = OpenAI()
-    response = llm.chat.completions.create(
-        model="gpt-3.5-turbo",
-        temperature=0.6,
-        messages=[
-            {
-              "role": "user",
-              "content": prompt,
-            }
-          ]
-    )
+    #llm = OpenAI()
+    #response = llm.chat.completions.create(
+        #model="gpt-3.5-turbo-instruct",
+        #temperature=0.6,
+        #messages=[
+         #   {
+         #     "role": "user",
+         #     "content": prompt,
+         #   }
+         # ]
+    #)
         
     #response = llm(prompt)
     #response = llm.chat.completions.create(messages=prompt)
-    return response
-    
-    #test = 'vacation'
-    #chain = SequentialChain(
-     #   chains=[name_chain],
-      #  input_variables=['test'],
-      #  output_variables=['travel']
-     #)    
-
-    #response = chain({'test': test})
     #return response
+    
+    test = 'vacation'
+    chain = SequentialChain(
+        chains=[name_chain],
+        input_variables=['test'],
+        output_variables=['travel']
+     )    
+
+    response = chain({'test': test})
+    return response
 
 
     
@@ -105,21 +105,20 @@ if not openai_api_key:
 # initialize Open AI
 import os
 os.environ['OPENAI_API_KEY'] = openai_api_key
-#llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
-llm = OpenAI(model_name="gpt-3.5-turbo", temperature = 0.6)
+llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
  
 # DO NOT CHANGE ABOVE ----
 
-#response = question1()
-#prompt = response['travel'].strip().split(",")
-#st.write(response)
+response = question1()
+prompt = response['travel'].strip().split(",")
+st.write(response)
 
 
 # ask user for what they want
 #prompt = generate_xxx()
 
 # for loop
-p1 = st.text_input(prompt)
+#p1 = st.text_input(prompt)
 
 # get the answer from LLM
 #if favorite_movies:
