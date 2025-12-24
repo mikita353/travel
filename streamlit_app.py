@@ -10,22 +10,15 @@ st.set_page_config(page_title="AI Travel Planner", layout="centered")
 st.title("✈️ AI-Powered Travel Planner")
 
 # -----------------------------------
-# OpenAI API Key (USER INPUT — REQUIRED)
+# OpenAI API Key (USER INPUT)
 # -----------------------------------
 
 with st.sidebar:
-    openai_api_key = st.text_input(
-        "OpenAI API Key",
-        type="password"
-    )
+    openai_api_key = st.text_input("OpenAI API Key", type="password")
 
 if not openai_api_key:
     st.info("Please enter your OpenAI API key to continue.")
     st.stop()
-
-# -----------------------------------
-# Initialize LLM (KEY PASSED EXPLICITLY)
-# -----------------------------------
 
 def get_llm():
     return ChatOpenAI(
@@ -42,21 +35,28 @@ if "step" not in st.session_state:
     st.session_state.step = 0
 
 if "qa_history" not in st.session_state:
-    st.session_state.qa_history = []  # list of (question, answer)
+    st.session_state.qa_history = []
 
 if "current_question" not in st.session_state:
-    st.session_state.current_question = (
-        "You are a professional travel planner. "
-        "Ask the FIRST detailed question needed to plan a vacation. "
-        "Assume the user does not know where they want to go."
-    )
+    st.session_state.current_question = None  # IMPORTANT
 
 if "final_plan" not in st.session_state:
     st.session_state.final_plan = None
 
 # -----------------------------------
-# Prompt Templates
+# Prompts (SYSTEM-ONLY)
 # -----------------------------------
+
+first_question_prompt = PromptTemplate(
+    input_variables=[],
+    template="""
+You are a professional travel planner.
+Ask the FIRST detailed question needed to plan a vacation.
+Assume the user does not know where they want to go.
+Ask only ONE clear, specific question.
+Return only the question text.
+"""
+)
 
 next_question_prompt = PromptTemplate(
     input_variables=["history"],
@@ -92,6 +92,16 @@ Be clear, practical, and well structured.
 )
 
 # -----------------------------------
+# Generate FIRST question (once)
+# -----------------------------------
+
+if st.session_state.current_question is None:
+    llm = get_llm()
+    chain = first_question_prompt | llm
+    result = chain.invoke({})
+    st.session_state.current_question = result.content.strip()
+
+# -----------------------------------
 # Display Previous Q&A
 # -----------------------------------
 
@@ -125,13 +135,11 @@ else:
         if not user_answer.strip():
             st.warning("Please provide an answer before continuing.")
         else:
-            # Save answer
             st.session_state.qa_history.append(
                 (st.session_state.current_question, user_answer.strip())
             )
             st.session_state.step += 1
 
-            # Build conversation history
             history_text = "\n".join(
                 [f"Q: {q}\nA: {a}" for q, a in st.session_state.qa_history]
             )
@@ -139,12 +147,10 @@ else:
             llm = get_llm()
 
             if st.session_state.step < 5:
-                # Generate next question
                 chain = next_question_prompt | llm
                 next_q = chain.invoke({"history": history_text})
                 st.session_state.current_question = next_q.content.strip()
             else:
-                # Generate final plan
                 chain = final_plan_prompt | llm
                 final_plan = chain.invoke({"history": history_text})
                 st.session_state.final_plan = final_plan.content.strip()
