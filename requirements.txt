@@ -7,3 +7,5 @@ langchain-community
 langchain-openai
 langchain-core
 openai
+langchain>=0.1.0
+
