@@ -1,126 +1,82 @@
+import os
 import streamlit as st
-#from langchain.llms import OpenAI
 from langchain_core.prompts import PromptTemplate
-from langchain.chains import LLMChain
-from langchain.chains import SequentialChain
+from langchain_openai import ChatOpenAI
 
-def question1():
-    """
-    Ask the first question to plan the vacation
-    
-    Returns:
-    A question for the user
-    """
+# ------------------------
+# Streamlit UI
+# ------------------------
 
-    prompt_template_name = PromptTemplate(
-        input_variables=[],
-        template="""You are planning an entire vacation for me. Ask me five detailed questions to 
-        provide me a tentative trip plan. Ask me one at a time; wait for me to respond and then
-        proceed with the next question. Assume I don't know where I want to go and suggest a spot.
-        Then tell me the "tentative" trip.""")
+st.title("Travel Suggestions")
 
-    prompt = """You are planning an entire vacation for me. Ask me 5 detailed questions to 
-        provide me a tentative trip plan. Ask me one at a time; wait for me to respond and then
-        proceed with the next question. Assume I don't know where I want to go and suggest a spot.
-        Then tell me the tentative trip."""
-
-    name_chain = LLMChain(llm=llm,
-                          prompt=prompt_template_name,
-                          output_key='travel')
-
-    #llm = OpenAI()
-    #response = llm.chat.completions.create(
-        #model="gpt-3.5-turbo-instruct",
-        #temperature=0.6,
-        #messages=[
-         #   {
-         #     "role": "user",
-         #     "content": prompt,
-         #   }
-         # ]
-    #)
-        
-    #response = llm(prompt)
-    #response = llm.chat.completions.create(messages=prompt)
-    #return response
-    
-    test = 'vacation'
-    chain = SequentialChain(
-        chains=[name_chain],
-        input_variables=['test'],
-        output_variables=['travel']
-     )    
-
-    response = chain({'test': test})
-    return response
-
-
-    
-def generate_travel(prompt1: str) -> list[str]:
-    """
-    Generate a list of movie suggestions
-
-    Parameters:
-    prompt1 (str): prompt 1
-
-    Returns:
-    list: Tentative trip plan.
-    """
-
-    prompt_template_name = PromptTemplate(
-        input_variables=['gender', 'nationality'],
-        template="""You are planning an entire vacation for me. Ask me five detailed questions to 
-        provide me a tentative trip plan. Ask me one at a time; wait for me to respond and then
-        proceed with the next question. Assume I don't know where I want to go and suggest a spot.
-        Then tell me the "tentative" trip.""")
-
-    name_chain = LLMChain(llm=llm,
-                          prompt=prompt_template_name,
-                          output_key='travel')
-
-    chain = SequentialChain(
-        chains=[name_chain],
-        input_variables=['favorite_movies'],
-        output_variables=['travel']
-     )    
-
-    response = chain({'favorite_movies': favorite_movies})
-    return response
-
-# main code
-st.title('Travel Suggestions')
-
-# DO NOT CHANGE BELOW ----
-
-
-# get open AI key from user
 with st.sidebar:
-    openai_api_key = st.text_input("OpenAI API Key", key="chatbot_api_key", type="password")
+    openai_api_key = st.text_input(
+        "OpenAI API Key",
+        key="chatbot_api_key",
+        type="password"
+    )
 
 if not openai_api_key:
-        st.info("Please add your OpenAI API key to continue.")
-        st.stop()
-    
-# initialize Open AI
-import os
-os.environ['OPENAI_API_KEY'] = openai_api_key
-llm = OpenAI(model_name="gpt-3.5-turbo-instruct", temperature = 0.6)
- 
-# DO NOT CHANGE ABOVE ----
+    st.info("Please add your OpenAI API key to continue.")
+    st.stop()
 
-response = question1()
-prompt = response['travel'].strip().split(",")
-st.write(response)
+os.environ["OPENAI_API_KEY"] = openai_api_key
+
+# ------------------------
+# Initialize LLM (modern)
+# ------------------------
+
+llm = ChatOpenAI(
+    model="gpt-4o-mini",
+    temperature=0.6
+)
+
+# ------------------------
+# Prompt
+# ------------------------
+
+travel_prompt = PromptTemplate(
+    input_variables=[],
+    template="""
+You are a professional travel planner.
+
+1. Suggest a destination for someone who does not know where they want to go.
+2. Ask FIVE detailed questions to plan the trip.
+3. Then provide a clearly labeled **Tentative Trip Plan**.
+
+Ask clear, practical questions (budget, duration, interests, travel style).
+"""
+)
+
+# ------------------------
+# Chain (LCEL)
+# ------------------------
+
+travel_chain = travel_prompt | llm
+
+# ------------------------
+# Functions
+# ------------------------
+
+def question1() -> str:
+    """
+    Generate vacation questions and a tentative trip plan
+    """
+    response = travel_chain.invoke({})
+    return response.content
 
 
-# ask user for what they want
-#prompt = generate_xxx()
+def generate_travel() -> str:
+    """
+    Generate a tentative trip plan (single-shot)
+    """
+    response = travel_chain.invoke({})
+    return response.content
 
-# for loop
-#p1 = st.text_input(prompt)
+# ------------------------
+# Run
+# ------------------------
 
-# get the answer from LLM
-#if favorite_movies:
-#    response = generate_travel(favorite_movies)
-#    prompt = response['travel'].strip().split(",")
-#
+if st.button("Plan My Vacation"):
+    result = question1()
+    st.markdown(result)
