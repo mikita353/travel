@@ -81,13 +81,23 @@ You are a professional travel planner.
 Based on the following questions and answers:
 {history}
 
-Create a detailed **Tentative Vacation Plan** including:
-- Suggested destination(s)
-- Length of trip
-- Activities and experiences
-- Travel style and budget assumptions
+Create a detailed **Tentative Vacation Plan** with the following STRICT rules:
 
-Be clear, practical, and well structured.
+RULES (IMPORTANT):
+- Choose **ONE single destination only**
+- Do NOT mention alternative destinations
+- Do NOT compare multiple places
+- Commit fully to the one best destination based on the user's answers
+
+Your plan MUST include:
+- Destination (only one)
+- Length of trip
+- Best time to go
+- Accommodation type and budget estimate
+- Day-by-day itinerary
+- Travel style assumptions
+
+Be clear, decisive, well-structured, and easy to read.
 """
 )
 
