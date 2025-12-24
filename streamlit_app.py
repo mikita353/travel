@@ -1,82 +1,91 @@
-import os
 import streamlit as st
-from langchain_core.prompts import PromptTemplate
-from langchain_openai import ChatOpenAI
+from langchain.chat_models import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+from langchain.chains import LLMChain
 
-# ------------------------
-# Streamlit UI
-# ------------------------
+st.set_page_config(page_title="Dynamic AI Vacation Planner", layout="centered")
+st.title("🌴 Dynamic AI Vacation Planner")
 
-st.title("Travel Suggestions")
-
+# Sidebar: OpenAI key input
 with st.sidebar:
-    openai_api_key = st.text_input(
-        "OpenAI API Key",
-        key="chatbot_api_key",
-        type="password"
-    )
+    openai_api_key = st.text_input("OpenAI API Key", type="password")
 
 if not openai_api_key:
     st.info("Please add your OpenAI API key to continue.")
     st.stop()
 
-os.environ["OPENAI_API_KEY"] = openai_api_key
-
-# ------------------------
-# Initialize LLM (modern)
-# ------------------------
-
+# Initialize LLM
 llm = ChatOpenAI(
-    model="gpt-4o-mini",
-    temperature=0.6
+    model_name="gpt-3.5-turbo",
+    temperature=0.7,
+    openai_api_key=openai_api_key
 )
 
-# ------------------------
-# Prompt
-# ------------------------
+# Session state for conversation
+if "conversation" not in st.session_state:
+    st.session_state.conversation = []  # stores tuples (question, answer)
+if "next_question" not in st.session_state:
+    st.session_state.next_question = (
+        "You are a travel planner AI. Ask me the first detailed question "
+        "to plan a vacation. Assume I don't know where I want to go."
+    )
+if "final_plan" not in st.session_state:
+    st.session_state.final_plan = None
 
-travel_prompt = PromptTemplate(
-    input_variables=[],
-    template="""
-You are a professional travel planner.
+# Display previous Q&A
+for i, (q, a) in enumerate(st.session_state.conversation):
+    st.markdown(f"**Q{i+1}: {q}**")
+    st.markdown(f"*Your answer:* {a}")
 
-1. Suggest a destination for someone who does not know where they want to go.
-2. Ask FIVE detailed questions to plan the trip.
-3. Then provide a clearly labeled **Tentative Trip Plan**.
+# If we already have the final plan, display it
+if st.session_state.final_plan:
+    st.subheader("📝 Tentative Vacation Plan")
+    st.write(st.session_state.final_plan)
+else:
+    # Show the next question
+    st.markdown(f"**Next Question:** {st.session_state.next_question}")
+    user_input = st.text_input("Your answer:", key="current_answer")
 
-Ask clear, practical questions (budget, duration, interests, travel style).
-"""
-)
+    if st.button("Submit Answer"):
+        if user_input.strip() != "":
+            # Save the answer
+            st.session_state.conversation.append((st.session_state.next_question, user_input.strip()))
 
-# ------------------------
-# Chain (LCEL)
-# ------------------------
+            # Prepare conversation context
+            conversation_text = "\n".join(
+                [f"Q: {q}\nA: {a}" for q, a in st.session_state.conversation]
+            )
 
-travel_chain = travel_prompt | llm
+            # Decide whether to ask next question or generate final plan
+            if len(st.session_state.conversation) < 5:
+                prompt_template = ChatPromptTemplate.from_template(
+                    """You are a helpful travel planner AI.
 
-# ------------------------
-# Functions
-# ------------------------
+                    The user has provided the following answers:
+                    {conversation}
 
-def question1() -> str:
-    """
-    Generate vacation questions and a tentative trip plan
-    """
-    response = travel_chain.invoke({})
-    return response.content
+                    Ask the next relevant question for planning their vacation. 
+                    Keep it specific and actionable. Only provide the question text."""
+                )
 
+                chain = LLMChain(llm=llm, prompt=prompt_template)
+                next_q = chain.run(conversation=conversation_text)
+                st.session_state.next_question = next_q.strip()
+            else:
+                # Generate final vacation plan
+                prompt_template = ChatPromptTemplate.from_template(
+                    """You are a travel planner AI.
 
-def generate_travel() -> str:
-    """
-    Generate a tentative trip plan (single-shot)
-    """
-    response = travel_chain.invoke({})
-    return response.content
+                    Based on the following user answers:
+                    {conversation}
 
-# ------------------------
-# Run
-# ------------------------
+                    Generate a complete, detailed, tentative vacation plan, including destination suggestions, activities, duration, and other recommendations."""
+                )
+                chain = LLMChain(llm=llm, prompt=prompt_template)
+                final_plan = chain.run(conversation=conversation_text)
+                st.session_state.final_plan = final_plan.strip()
+                st.session_state.next_question = None
 
-if st.button("Plan My Vacation"):
-    result = question1()
-    st.markdown(result)
+            st.experimental_rerun()
+        else:
+            st.warning("Please provide an answer before proceeding.")
