@@ -139,7 +139,10 @@ else:
     st.subheader(f"Question {st.session_state.step + 1} of 5")
     st.markdown(f"**{st.session_state.current_question}**")
 
-    user_answer = st.text_input("Your answer:")
+    user_answer = st.text_input(
+    "Your answer:",
+    key=f"answer_input_{st.session_state.step}"
+)
 
     if st.button("Submit Answer"):
         if not user_answer.strip():
