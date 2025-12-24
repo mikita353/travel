@@ -7,7 +7,7 @@ from langchain_core.prompts import PromptTemplate
 # -----------------------------------
 
 st.set_page_config(page_title="AI Travel Planner", layout="centered")
-st.title("AI-Powered Travel Planner")
+st.title("Travel Planner")
 
 # -----------------------------------
 # OpenAI API Key (USER INPUT)
