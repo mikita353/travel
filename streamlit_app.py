@@ -76,4 +76,77 @@ Return only the question text.
 final_plan_prompt = PromptTemplate(
     input_variables=["history"],
     template="""
-You are a professional travel p
+You are a professional travel planner.
+
+Based on the following questions and answers:
+{history}
+
+Create a detailed **Tentative Vacation Plan** including:
+- Suggested destination(s)
+- Length of trip
+- Activities and experiences
+- Travel style and budget assumptions
+
+Be clear, practical, and well structured.
+"""
+)
+
+# -----------------------------------
+# Display Previous Q&A
+# -----------------------------------
+
+if st.session_state.qa_history:
+    st.subheader("Your Answers So Far")
+    for i, (q, a) in enumerate(st.session_state.qa_history, start=1):
+        st.markdown(f"**Q{i}:** {q}")
+        st.markdown(f"*A:* {a}")
+
+st.divider()
+
+# -----------------------------------
+# Main Flow
+# -----------------------------------
+
+if st.session_state.final_plan:
+    st.subheader("🗺️ Your Tentative Vacation Plan")
+    st.markdown(st.session_state.final_plan)
+
+    if st.button("Start Over"):
+        st.session_state.clear()
+        st.rerun()
+
+else:
+    st.subheader(f"Question {st.session_state.step + 1} of 5")
+    st.markdown(f"**{st.session_state.current_question}**")
+
+    user_answer = st.text_input("Your answer:")
+
+    if st.button("Submit Answer"):
+        if not user_answer.strip():
+            st.warning("Please provide an answer before continuing.")
+        else:
+            # Save answer
+            st.session_state.qa_history.append(
+                (st.session_state.current_question, user_answer.strip())
+            )
+            st.session_state.step += 1
+
+            # Build conversation history
+            history_text = "\n".join(
+                [f"Q: {q}\nA: {a}" for q, a in st.session_state.qa_history]
+            )
+
+            llm = get_llm()
+
+            if st.session_state.step < 5:
+                # Generate next question
+                chain = next_question_prompt | llm
+                next_q = chain.invoke({"history": history_text})
+                st.session_state.current_question = next_q.content.strip()
+            else:
+                # Generate final plan
+                chain = final_plan_prompt | llm
+                final_plan = chain.invoke({"history": history_text})
+                st.session_state.final_plan = final_plan.content.strip()
+
+            st.rerun()
